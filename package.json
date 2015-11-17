@@ -1,0 +1,22 @@
+{
+  "name": "atem-automator",
+  "version": "1.0.0",
+  "description": "Automatically controls a Blackmagic ATEM depending on the state of different inputs.",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "node_modules/.bin/nodeunit"
+  },
+  "author": "Tom Jenkinson",
+  "devDependencies": {
+    "nodeunit": "^0.9.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LA1TV/atem-automator.git"
+  },
+  "author": "Tom Jenkinson",
+  "bugs": {
+    "url": "https://github.com/LA1TV/atem-automator/issues"
+  },
+  "homepage": "https://github.com/LA1TV/atem-automator#readme"
+}
