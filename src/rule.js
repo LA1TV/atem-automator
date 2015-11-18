@@ -1,7 +1,8 @@
 var events = require('events');
 var arraysEqual = require('./helpers').arraysEqual;
 
-var Rule = function(priority, inputs, cameras) {
+var Rule = function(id, priority, inputs, cameras) {
+	this._id = id;
 	this._priority = priority;
 	this._inputs = inputs;
 	this._cameras = cameras;
@@ -11,6 +12,10 @@ var Rule = function(priority, inputs, cameras) {
 Rule.prototype.getEmitter = function() {
 	return this._emitter;
 }
+
+Rule.prototype.getId = function() {
+	return this._id;
+};
 
 Rule.prototype.getPriority = function() {
 	return this._priority;

@@ -1,0 +1,140 @@
+{
+	"restApi": {
+		"enabled": true,
+		"apiKey": "secret"
+	},
+	"cameras": [
+		{
+			"id": 1,
+			"name": "Studio 1 Cam 1",
+			"enabled": true
+		},
+		{
+			"id": 2,
+			"name": "Studio 1 Cam 2",
+			"enabled": true
+		},
+		{
+			"id": 3,
+			"name": "Studio 1 Wide Cam",
+			"enabled": true
+		},
+		{
+			"id": 4,
+			"name": "Studio 2 Cam",
+			"enabled": true
+		},
+		{
+			"id": 5,
+			"name": "Lounge Cam",
+			"enabled": true
+		}
+	],
+	"inputs": [
+		{
+			"id": 1,
+			"name": "Studio 1 Motion Sensor",
+			/* is this input is in operation? */
+			"enabled": true,
+			/* what should the initial state be before receiving first update? */
+			/* If enabled is 'false' then this will always be the state */
+			"initialState": false
+		},
+		{
+			"id": 2,
+			"name": "Studio 1 Mic 1",
+			"enabled": true,
+			"initialState": false
+		},
+		{
+			"id": 3,
+			"name": "Studio 1 Mic 2",
+			"enabled": true,
+			"initialState": false
+		},
+		{
+			"id": 4,
+			"name": "Studio 2 Motion Sensor",
+			"enabled": true,
+			"initialState": false
+		}
+	],
+	/* virtual inputs are true if any of the inputs they contain are true */
+	/* the set of the ids of inputs and virtual inputs must not conain duplicates */
+	"virtualInputs": [
+		{
+			/* this input will resolve to true if any of sensor 1, 2, or 3 are active */
+			/* ie this is active if someone is in the room */
+			"id": 5,
+			"name": "Studio 1 Active",
+			"inputIds": [1, 2, 3]
+		}
+	],
+	/*
+	 * Rules with higher priorities take precedense over other rules.
+	 *
+	 * If rules have the same priority then the camera ids from all the active
+	 * rules with the same priority are merged together, but the next switch
+	 * will be to a camera in the rule that most recently became active
+	 */
+	"rules": [
+		{
+			/* by default when there are no inputs active, show the lounge cam */
+			"id": 1,
+			"priority": 1,
+			"inputIds": [],
+			"cameraIds": [4], // lounge cam
+			/* whenever the lounge cam is switched to, it must remain live for at least 5 seconds */
+			"minDuration": 5000,
+			"holdDuration": 0
+		},
+		{
+			/* Switch to wide cam in studio 1 when stuff is happening in it */
+			"id": 2,
+			"priority": 3,
+			"inputIds": [5], // virtual input which is active whenever stuff is happening in studio 1
+			"cameraIds": [3], // studio 1 wide cam
+			/* whenever this cam is switched to, it must remain live for at least 5 seconds */
+			"minDuration": 5000,
+			/* whenever the inputs for this rule become inactive,
+			 * the rule will remain active for this amount of time afterwards */
+			"holdDuration": 60000
+		},
+		{
+			/* Switch to the closeup cam on mic 1 when mic live */
+			"id": 3,
+			"priority": 4,
+			"inputIds": [2], // studio 1 mic 1
+			"cameraIds": [2], // studio 1 cam 1
+			/* Must remain on this camera for at least .5 seconds before free to
+			 * switch to other cameras  in rules WITH THE SAME PRIOROTY that are also active */
+			"internalMinDuration": 500,
+			/* Must remain on this camera for at least 1 second before can move away (to a rule with different priority) */
+			"minDuration": 1000,
+			/* when the inputs on this rule become inactive the rule will remain
+			 * active for this amount of time afterwards */
+			"holdDuration": 5000
+		},
+		{
+			/* Swutch to the closup cam on mic 2 when mic live */
+			/* same setup as rule 3 with SAME PRIORITY */
+			"id": 4,
+			"priority": 4,
+			"inputIds": [3], // studio 1 mic 2
+			"cameraIds": [1], // studio 1 cam 2
+			"internalMinDuration": 500,
+			"minDuration": 1000,
+			"holdDuration": 5000
+		},
+		{
+			/* switch to cam in studio 2 when motion in studio 2 */
+			"id": 5,
+			"priority": 2,
+			"inputIds": [4], // studio 2 motion sensor
+			"cameraIds": [4], // studio 2 cam
+			"minDuration": 5000, // must stay live for at least 5 seconds before switching
+			/* when motion stops being detected, this rule will stay active for another 45 seconds */
+			"holdDuration": 45000
+		}
+	]
+}

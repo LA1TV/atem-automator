@@ -1,5 +1,6 @@
-var Camera = function(id, enabled) {
+var Camera = function(id, name, enabled) {
 	this._id = id;
+	this._name = name;
 	this._enabled = !!enabled;
 };
 
@@ -13,6 +14,14 @@ Camera.prototype.isEnabled = function() {
 
 Camera.prototype.setEnabled = function(enabled) {
 	this._enabled = !!enabled;
+}
+
+Camera.prototype.getName = function() {
+	return this._name;
+}
+
+Camera.prototype.setName = function(name) {
+	this._name = name;
 }
 
 module.exports = Camera;

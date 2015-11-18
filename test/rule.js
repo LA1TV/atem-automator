@@ -7,11 +7,11 @@ exports.setUp = function(callback) {
 	this.input2 = new Input(150, "Studio 2 Mic Live", true, false);
 	this.disabledInput = new Input(150, "Door Input Which Is Broken", false, true);
 	this.inputs = [this.input1, this.input2, this.disabledInput];
-	this.camera1 = new Camera(1, true);
-	this.camera2 = new Camera(2, true);
-	this.disabledCamera = new Camera(3, false);
+	this.camera1 = new Camera(1, "Camera 1", true);
+	this.camera2 = new Camera(2, "Camera 2", true);
+	this.disabledCamera = new Camera(3, "Lounge Camera", false);
 	this.cameras = [this.camera1, this.camera2, this.disabledCamera];
-	this.rule = new Rule(2, this.inputs, this.cameras);
+	this.rule = new Rule(105, 2, this.inputs, this.cameras);
 	callback();
 };
 
@@ -22,7 +22,8 @@ exports.canBeInstansiated = function(test) {
 };
 
 exports.initialisedWithCorrectInfo = function(test) {
-	test.expect(3);
+	test.expect(4);
+	test.strictEqual(this.rule.getId(), 105);
 	test.strictEqual(this.rule.getPriority(), 2);
 	test.strictEqual(this.rule.getInputs(), this.inputs);
 	test.strictEqual(this.rule.getCameras(), this.cameras);
