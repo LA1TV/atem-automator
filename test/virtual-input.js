@@ -38,7 +38,26 @@ exports.hasEventEmitter = function(test) {
 };
 
 exports.stateChangeEventFired = function(test) {
-	test.done(); // TODO
+	test.expect(4);
+	
+	var expecting = [true, false, true, false];
+	this.virtualInput.getEmitter().on("stateChanged", function(active) {
+		test.strictEqual(active, expecting.shift());
+		if (expecting.length === 0) {
+			test.done();
+		}
+	});
+
+	// event
+	this.motionInput.setActive(true);
+	// event
+	this.motionInput.setActive(false);
+	// event
+	this.micInput.setActive(true);
+	this.motionInput.setActive(true);
+	this.micInput.setActive(false);
+	// event
+	this.motionInput.setActive(false);
 };
 
 exports.stateIsCorrect = function(test) {
